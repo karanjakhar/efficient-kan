@@ -155,7 +155,7 @@ class KANLinear(torch.nn.Module):
         original_shape = x.shape
         x = x.reshape(-1, self.in_features)
 
-        base_output = F.linear(self.base_activation(x), self.base_weight)
+        base_output = F.linear(self.base_activation(x), self.base_weight) # = S(x)W + 
         spline_output = F.linear(
             self.b_splines(x).view(x.size(0), -1),
             self.scaled_spline_weight.view(self.out_features, -1),

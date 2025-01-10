@@ -1,4 +1,8 @@
+import sys
+sys.path.append('../src')
+
 from efficient_kan import KAN
+
 
 # Train on MNIST
 import torch
@@ -31,6 +35,16 @@ optimizer = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
 # Define learning rate scheduler
 scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.8)
 
+
+# Print the trainable parameters
+print("Trainable Parameters:")
+for name, param in model.named_parameters():
+    if param.requires_grad:
+        print(f"{name}: {param.numel()} elements")
+
+# Optional: print the total number of trainable parameters
+total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"\nTotal Trainable Parameters: {total_params}")
 # Define loss
 criterion = nn.CrossEntropyLoss()
 for epoch in range(10):
@@ -68,3 +82,8 @@ for epoch in range(10):
     print(
         f"Epoch {epoch + 1}, Val Loss: {val_loss}, Val Accuracy: {val_accuracy}"
     )
+
+
+# Save model weights
+torch.save(model.state_dict(), "model_weights.pth")
+print("Model weights saved to 'model_weights.pth'")
